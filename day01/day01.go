@@ -37,7 +37,7 @@ func countIncreasesWindow(depths []int, window int) int {
 }
 
 func readInput() []int {
-	bs, err := ioutil.ReadFile("./data/day01.txt")
+	bs, err := ioutil.ReadFile("../data/day01.txt")
 	if err != nil {
 		fmt.Println("Error reading file")
 		os.Exit(0)
