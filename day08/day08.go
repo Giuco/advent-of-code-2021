@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"io/ioutil"
+	"strconv"
 	"strings"
 )
 
@@ -10,6 +11,8 @@ type entry struct {
 	first  []string
 	second []string
 }
+
+type stone map[string]string
 
 func parseInput(text string) []entry {
 	lines := strings.Split(text, "\n")
@@ -63,9 +66,9 @@ func count1478(entries []entry) int {
 	return count
 }
 
-func decodeEntry(first []string) map[string]string {
+func translateEntry(first []string) stone {
 	countsChrs := map[rune]int{}
-	rosettaStone := map[string]string{}
+	rosettaStone := stone{}
 
 	for _, seq := range first {
 		for _, digit := range seq {
@@ -90,8 +93,22 @@ func decodeEntry(first []string) map[string]string {
 					rosettaStone[sortSeqtring(seq)] = "5"
 				}
 			}
-		} else if len(seq) == 6 {
 
+			if _, twoOrFive := rosettaStone[sortSeqtring(seq)]; !twoOrFive {
+				rosettaStone[sortSeqtring(seq)] = "3"
+			}
+		} else if len(seq) == 6 {
+			countSegmentsWithKeyInstances := make(map[int]int)
+			for _, segment := range seq {
+				countSegmentsWithKeyInstances[countsChrs[segment]]++
+			}
+			if countSegmentsWithKeyInstances[4] == 0 {
+				rosettaStone[sortSeqtring(seq)] = "9"
+			} else if countSegmentsWithKeyInstances[7] == 1 {
+				rosettaStone[sortSeqtring(seq)] = "0"
+			} else {
+				rosettaStone[sortSeqtring(seq)] = "6"
+			}
 		}
 
 	}
@@ -99,10 +116,32 @@ func decodeEntry(first []string) map[string]string {
 	return rosettaStone
 }
 
+func decodeEntry(entries []string, stone stone) int {
+	decodedEntry := ""
+	for _, entry := range entries {
+		decodedEntry += stone[sortSeqtring(entry)]
+	}
+	output, err := strconv.Atoi(decodedEntry)
+	if err != nil {
+		panic(err)
+	}
+	return output
+}
+
+func decodeAll(entries []entry) int {
+	sumDecoded := 0
+	for _, entry := range entries {
+		stone := translateEntry(entry.first)
+		decoded := decodeEntry(entry.second, stone)
+		sumDecoded += decoded
+	}
+	return sumDecoded
+}
+
 func sortSeqtring(s string) string {
 	sorted := ""
 	for _, l := range []string{"a", "b", "c", "d", "e", "f", "g"} {
-		if strings.Contains(l, s) {
+		if strings.Contains(s, l) {
 			sorted += l
 		}
 	}
@@ -111,6 +150,6 @@ func sortSeqtring(s string) string {
 
 func main() {
 	input := readInput()
-	count := count1478(input)
-	fmt.Println("Part 1: ", count)
+	fmt.Println("Part 1: ", count1478(input))
+	fmt.Println("Part 2", decodeAll(input))
 }

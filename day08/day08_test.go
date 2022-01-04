@@ -29,3 +29,11 @@ func TestCount1478(t *testing.T) {
 		t.Errorf("Expected result: %v Actual result %v", 26, count)
 	}
 }
+
+func TestDecodeAll(t *testing.T) {
+	input := parseInput(raw_input)
+	total := decodeAll(input)
+	if total != 61229 {
+		t.Errorf("Expected result: %v Actual result %v", 61229, total)
+	}
+}
