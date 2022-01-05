@@ -70,3 +70,14 @@ func TestAutoComplete(t *testing.T) {
 		}
 	}
 }
+
+func TestRunPart2(t *testing.T) {
+	input := parseInput(rawInput)
+	output := runPart2(input)
+	expected := 288957
+
+	if output != expected {
+		t.Errorf("Expect %v. Got %v", expected, output)
+	}
+
+}

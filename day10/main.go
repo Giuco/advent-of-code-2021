@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"io/ioutil"
+	"sort"
 	"strings"
 )
 
@@ -97,31 +98,39 @@ func autoComplete(text string) []string {
 	return closes
 }
 
-// func runPart2(inputs []string) int {
-// 	var total int
-// 	var autoCompleted []string
+func runPart2(inputs []string) int {
+	var autoCompleted []string
+	var allPoints []int
 
-// 	for _, x := range inputs {
-// 		if findFirstWrongClosing(x) != "" {
-// 			autoCompleted = autoComplete(x)
-// 			total *= 5
-// 			total += getAutoCompletePoints(autoCompleted)
-// 		}
-// 	}
-// 	return total
-// }
+	for _, x := range inputs {
+		if findFirstWrongClosing(x) == "" {
+			autoCompleted = autoComplete(x)
+			allPoints = append(allPoints, getAutoCompletePoints(autoCompleted))
+		}
+	}
 
-// func getAutoCompletePoints(c string) int {
-// 	points := map[string]int{
-// 		")": 1,
-// 		"]": 2,
-// 		"}": 3,
-// 		">": 4,
-// 	}
-// 	return points[c]
-// }
+	sort.Ints(allPoints)
+	return allPoints[len(allPoints)/2]
+}
+
+func getAutoCompletePoints(cs []string) int {
+	points := map[string]int{
+		")": 1,
+		"]": 2,
+		"}": 3,
+		">": 4,
+	}
+	total := 0
+
+	for _, c := range cs {
+		total *= 5
+		total += points[c]
+	}
+	return total
+}
 
 func main() {
 	input := readInput()
 	fmt.Println("Part 1 -", runPart1(input))
+	fmt.Println("Part 2 -", runPart2(input))
 }
