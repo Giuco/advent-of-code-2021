@@ -69,6 +69,15 @@ func TestRunNSteps(t *testing.T) {
 	output := runNSteps(octoMap, 100)
 
 	if output != 1656 {
-		t.Errorf("Expect %v. Got %v", 1656, output)
+		t.Errorf("Expected %v. Got %v", 1656, output)
+	}
+}
+
+func TestGetSyncStep(t *testing.T) {
+	octoMap := parseInput(rawInput)
+	step := getSyncStep(octoMap)
+
+	if step != 195 {
+		t.Errorf("Expected %v. Got %v", 195, step)
 	}
 }

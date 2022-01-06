@@ -135,7 +135,37 @@ func formatOctoMap(octoMap [][]int) string {
 	return output
 }
 
+func getSyncStep(octoMap [][]int) int {
+	var n int
+	var allEqual bool
+
+	for k := 0; k < 1000; k++ {
+		runStep(octoMap)
+		allEqual = true
+		n = octoMap[0][0]
+		for i := 0; i < len(octoMap); i++ {
+			for j := 0; j < len(octoMap[i]); j++ {
+				if octoMap[i][j] != n {
+					allEqual = false
+					break
+				}
+			}
+			if !allEqual {
+				break
+			}
+		}
+
+		if allEqual {
+			return k + 1
+		}
+	}
+
+	panic("Max iter")
+}
+
 func main() {
 	octoMap := readInput()
 	fmt.Println("Part 1 -", runNSteps(octoMap, 100))
+	octoMap = readInput()
+	fmt.Println("Part 2 -", getSyncStep(octoMap))
 }
