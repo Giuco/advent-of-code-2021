@@ -141,6 +141,7 @@ func getSyncStep(octoMap [][]int) int {
 
 	for k := 0; k < 1000; k++ {
 		runStep(octoMap)
+		
 		allEqual = true
 		n = octoMap[0][0]
 		for i := 0; i < len(octoMap); i++ {
